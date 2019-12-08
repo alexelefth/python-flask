@@ -139,3 +139,30 @@ def upload_photo():
                 filename = secure_filename(filename)
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         return render_template('admin/upload_photo.html', admin=admin, username=username, user_id=session['userID'])           
+
+# error handling
+@app.errorhandler(404)
+def custom_404(error):
+    return render_template('404.html')
+
+@app.errorhandler(CSRFError)
+def handle_csrf_error(e):
+    return render_template('csrf_error.html', reason=e.description), 400
+
+@app.after_request
+def add_header(response):
+    """
+    Add headers to both force latest IE rendering engine or Chrome Frame,
+    and also to cache the rendered page for 10 minutes.
+    """
+    response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
+    response.headers['Cache-Control'] = 'public, max-age=0'
+    return response
+
+@login_manager.user_loader
+def load_user(userID):
+    return User(userID = userID)
+
+if __name__ == '__main__':
+    print("Starting Python Server...")
+    app.run(ssl_context=('cert.pem', 'key.pem'))
