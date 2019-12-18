@@ -112,7 +112,34 @@ def logout():
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-           
+
+@app.route('/csrf_with_token', methods=['GET', 'POST'])
+@login_required
+def csrf_with_token():
+    username = session['username']
+    admin = session['admin']
+    if admin:
+        if request.method == "POST":
+            csrf_input = request.form['csrf_input']
+            return render_template('admin/csrf-output.html', csrf_input=csrf_input)
+        return render_template('admin/with-csrf-token.html', username=username, admin=admin, session_active=True,
+                                   user_id=session['userID'])
+    return redirect(url_for('login'))
+
+@app.route('/csrf_without_token', methods=['GET', 'POST'])
+@csrf.exempt
+@login_required
+def csrf_without_token():
+    username = session['username']
+    admin = session['admin']
+    if admin:
+        if request.method == "POST":
+            csrf_input = request.form['csrf_input']
+            return render_template('admin/csrf-output.html', csrf_input=csrf_input)
+        return render_template('admin/without-csrf-token.html', username=username, admin=admin, session_active=True,
+                                   user_id=session['userID'])
+    return redirect(url_for('login'))
+          
 @app.route('/upload', methods=['GET', 'POST'])
 @login_required
 def upload_photo():

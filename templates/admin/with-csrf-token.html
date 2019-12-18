@@ -1,0 +1,6 @@
+<form method="post" action="">
+	<p> input: <input type="text" name="csrf_input" />	
+		<input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+	<input type="submit" value="submit" /> </p>
+
+</form>
