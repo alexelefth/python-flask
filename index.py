@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, session, url_for, redirect, abort, flash
+from flask_wtf.csrf import CSRFProtect, CSRFError
 from flask_bcrypt import Bcrypt
 from werkzeug.utils import secure_filename
 from flask_bcrypt import Bcrypt
@@ -67,16 +68,14 @@ def login():
         hash = bcrypt.generate_password_hash(password)
 
         # api call goes here
-        #res = "api response"
-        #response_list = res.json()
-
+        # hardcoded example follows for demo purposes
+        response_list = {'username':'alex','password':'alex','role':'admin','userID':1}
         # check api response
-        #if response_list:
-        #    db_user = response_list['username']
-        #    db_password = response_list['password']
-        #    db_role = response_list['role']
-        #    db_userID = response_list['userID']
-
+        if response_list:
+            db_user = response_list['username']
+            db_password = response_list['password']
+            db_role = response_list['role']
+            db_userID = response_list['userID']
             new_user = User(str(db_userID))
         else:
             return redirect(url_for('login'))
@@ -97,7 +96,7 @@ def login():
             return redirect(url_for('index'))
         else:
             return redirect(url_for('login'))
-    return render_template('login.html', session_inactive=True)
+    return render_template('/login.html', session_inactive=True)
 
 @app.route('/logout')
 @login_required
@@ -165,4 +164,4 @@ def load_user(userID):
 
 if __name__ == '__main__':
     print("Starting Python Server...")
-    app.run(ssl_context=('cert.pem', 'key.pem'))
+    app.run(debug=True,ssl_context=('cert.pem', 'key.pem'))
