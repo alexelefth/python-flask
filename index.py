@@ -5,6 +5,7 @@ from werkzeug.utils import secure_filename
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, login_required, login_user, logout_user
 from is_safe_url import is_safe_url
+import os
 
 UPLOAD_FOLDER = 'static/images'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
